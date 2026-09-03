@@ -53,13 +53,13 @@ public class MemberController {
 //        return map;
 //    }
 
-    @GetMapping("/getMember")
-    public HashMap<String, Object>getMember(@RequestParam("snsid") String snsid){
-        HashMap<String, Object> map = new HashMap<>();
-        ms.getSnsid(snsid);
-        map.put("msg","OK");
-        return map;
-    }
+//    @GetMapping("/getMember")
+//    public HashMap<String, Object>getMember(@RequestParam("snsid") String snsid){
+//        HashMap<String, Object> map = new HashMap<>();
+//        ms.getSnsid(snsid);
+//        map.put("msg","OK");
+//        return map;
+//    }
 
     @PostMapping("/insertMember")
     public HashMap<String, Object>join(@RequestBody Member member){
@@ -301,7 +301,7 @@ public class MemberController {
         if (member == null) {
             map.put("msg", "notOK");
         } else {
-            map.put("msg", "OK");
+            map.put("msg", "ok");
 
             // 프론트가 result.data.userid를 사용하고 있어서
             // userid라는 이름으로 이메일을 보내준다.
@@ -402,25 +402,8 @@ public class MemberController {
         return result;
     }
 
-    @PostMapping("/conFirmCode")
-    public HashMap<String, Object> conFirmCode(
-            @RequestParam("email") String email,
-            @RequestParam("usercode") String usercode){
-        HashMap<String, Object> result = new HashMap<>();
 
-        String emailKey = email.trim().toLowerCase();
-        Integer savedCode = emailCodeMap.get(emailKey);
 
-        if(savedCode != null && String.valueOf(savedCode).equals(usercode.trim())) {
-            result.put("msg", "ok");
 
-            // 인증에 성공한 번호는 다시 사용할 수 없도록 삭제합니다.
-            emailCodeMap.remove(emailKey);
-        } else {
-            result.put("msg", "not_ok");
-        }
-
-        return result;
-    }
 
 }
