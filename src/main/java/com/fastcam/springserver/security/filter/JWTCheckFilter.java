@@ -164,6 +164,14 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         if (path.startsWith("/member/conFirmCode"))
             return true;
 
+        // 상점 상품과 친밀도 랭킹은 비회원도 조회할 수 있습니다.
+        if ("GET".equalsIgnoreCase(request.getMethod())
+                && path.startsWith("/item/"))
+            return true;
+        if ("GET".equalsIgnoreCase(request.getMethod())
+                && path.startsWith("/affinity/ranking"))
+            return true;
+
         return false;
     }
 }

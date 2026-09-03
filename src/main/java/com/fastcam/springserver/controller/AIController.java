@@ -4,7 +4,11 @@ import com.fastcam.springserver.dto.RequestDto;
 import com.fastcam.springserver.dto.ResponseDto;
 import com.fastcam.springserver.entity.EmotionDiary;
 import com.fastcam.springserver.service.AIService;
+import com.fastcam.springserver.service.AffinityService;
 import com.fastcam.springserver.service.EmotionDiaryService;
+import com.fastcam.springserver.service.ChatHistoryService;
+import com.fastcam.springserver.entity.ChatMessage;
+import com.fastcam.springserver.entity.ChatSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,9 +22,14 @@ import org.springframework.web.bind.annotation.*;
 public class AIController {
 
     private final AIService aiService;
+    private final AffinityService affinityService;
+    private final ChatHistoryService chatHistoryService;
 
-    public AIController(AIService aiService) {
+    public AIController(AIService aiService, AffinityService affinityService,
+                        ChatHistoryService chatHistoryService) {
         this.aiService = aiService;
+        this.affinityService = affinityService;
+        this.chatHistoryService = chatHistoryService;
     }
 
     @Autowired
@@ -44,13 +53,42 @@ public class AIController {
         System.out.println("=================================");
 
 
-        ResponseDto response =
-                aiService.chat(req);
+        // AI 호출 전 원래 사용자 메시지를 DB에 먼저 저장합니다.
+        chatHistoryService.saveMessage(req.getUserid(), req.getSession_id(),
+                req.getCharacter(), "USER", req.getMessage());
+
+        // 이미지·문서·검색·RAG 도구 선택은 FastAPI가 담당합니다.
+        ResponseDto response = aiService.chat(req);
+
+        // AI가 실제로 답변한 내용도 같은 세션에 이어서 저장합니다.
+        if (response != null) {
+            chatHistoryService.saveMessage(req.getUserid(), req.getSession_id(),
+                    req.getCharacter(), "AI", response.getMessage());
+        }
+
+        // AI 답변이 정상적으로 생성된 경우 대화 경험치를 소량 지급합니다.
+        if (req.getUserid() > 0 && response != null) {
+            // 현재 대화한 캐릭터의 친밀도만 증가시킵니다.
+            affinityService.addChatExperience(req.getUserid(), req.getCharacter());
+        }
 
 
         System.out.println("AI 응답 : " + response.getMessage());
 
         return ResponseEntity.ok(response);
+    }
+
+    /** 로그인 회원이 본인의 대화방 목록을 조회합니다. */
+    @GetMapping("/sessions")
+    public ResponseEntity<java.util.List<ChatSession>> sessions(@RequestParam int userId) {
+        return ResponseEntity.ok(chatHistoryService.getSessions(userId));
+    }
+
+    /** 선택한 대화방의 메시지를 시간 순서대로 조회합니다. */
+    @GetMapping("/history/{sessionId}")
+    public ResponseEntity<java.util.List<ChatMessage>> history(
+            @PathVariable String sessionId, @RequestParam int userId) {
+        return ResponseEntity.ok(chatHistoryService.getMessages(userId, sessionId));
     }
 
 

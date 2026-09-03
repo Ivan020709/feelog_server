@@ -7,6 +7,7 @@ import com.fastcam.springserver.service.AdminErrorService;
 import com.fastcam.springserver.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -18,6 +19,16 @@ public class AdminController {
 
     @Autowired
     AdminService as;
+
+    /** 관리자 페이지의 읽기 전용 회원 목록입니다. */
+    @GetMapping("/members")
+    public ResponseEntity<?> members(@RequestParam String adminEmail) {
+        try {
+            return ResponseEntity.ok(as.getMemberList(adminEmail));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(403).body(java.util.Map.of("msg", "FAIL", "message", e.getMessage()));
+        }
+    }
 
     @PostMapping("/report")
     public HashMap<String, Object> report(

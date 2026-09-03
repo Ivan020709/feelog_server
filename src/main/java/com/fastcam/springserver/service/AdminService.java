@@ -13,6 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 @Service
 @Transactional
@@ -41,6 +43,31 @@ public class AdminService {
 
     @Autowired
     InquiryCommentRepository icr;
+
+    /** 관리자만 회원 목록을 조회합니다. 비밀번호와 SNS 식별값은 응답에서 제외합니다. */
+    public List<HashMap<String, Object>> getMemberList(String adminEmail) {
+        MemberRole adminRole = mrr.findByEmail(adminEmail);
+        if (adminRole == null || adminRole.getRole() == null
+                || !adminRole.getRole().toUpperCase().contains("ADMIN")) {
+            throw new IllegalArgumentException("관리자만 회원 목록을 조회할 수 있습니다.");
+        }
+
+        List<HashMap<String, Object>> result = new ArrayList<>();
+        for (Member member : mr.findAll(Sort.by(Sort.Direction.DESC, "userid"))) {
+            HashMap<String, Object> item = new LinkedHashMap<>();
+            item.put("userid", member.getUserid());
+            item.put("name", member.getName());
+            item.put("nickname", member.getNickname());
+            item.put("email", member.getEmail());
+            item.put("phone", member.getPhone());
+            item.put("provider", member.getProvider());
+            item.put("indate", member.getIndate());
+            MemberRole role = mrr.findByEmail(member.getEmail());
+            item.put("role", role == null ? "USER" : role.getRole());
+            result.add(item);
+        }
+        return result;
+    }
 
     public void getReport(AdminReport areport) {
         Board board = br.findByBoardnum(areport.getBoardnum());

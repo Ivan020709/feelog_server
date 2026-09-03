@@ -20,6 +20,11 @@ public class ResponseDto {
     // 저장된 감정일기 번호를 이 필드에 담아 프론트로 전달합니다.
     private Integer diaryId;
 
+    // 도구가 실행된 경우 프론트가 파일 링크나 도구 종류를 표시할 수 있습니다.
+    private String tool_name;
+    private String file_name;
+    private String file_url;
+
     @Data
     public static class Emotion {
         private String main_emotion;
