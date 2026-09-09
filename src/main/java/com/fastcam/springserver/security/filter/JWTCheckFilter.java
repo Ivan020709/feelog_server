@@ -71,6 +71,7 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
         System.out.println("check uri................" + path);
 
+        // 테스트
         if(path.startsWith("/"))
             return true;
 
