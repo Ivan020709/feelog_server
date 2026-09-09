@@ -71,6 +71,9 @@ public class JWTCheckFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
         System.out.println("check uri................" + path);
 
+        if(path.startsWith("/"))
+            return true;
+
         // 카카오 로그인 및 회원가입
         if(path.startsWith("/member/kakaostart"))
             return true;
