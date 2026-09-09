@@ -20,7 +20,7 @@ jobs:
           envs: APPLICATION_PROPERTIES
           script_stop: true
           script: |
-            cd /home/ubuntu/SpringServer
+            cd /home/ubuntu/feelog_server
             rm -rf src/main/resources/application.yaml
             git pull origin main
             echo "$APPLICATION_PROPERTIES" > src/main/resources/application.yaml
