@@ -402,7 +402,26 @@ public class MemberController {
         return result;
     }
 
+    @PostMapping("/conFirmCode")
+    public HashMap<String, Object> conFirmCode(
+            @RequestParam("email") String email,
+            @RequestParam("usercode") String usercode){
+        HashMap<String, Object> result = new HashMap<>();
 
+        String emailKey = email.trim().toLowerCase();
+        Integer savedCode = emailCodeMap.get(emailKey);
+
+        if(savedCode != null && String.valueOf(savedCode).equals(usercode.trim())) {
+            result.put("msg", "ok");
+
+            // 인증에 성공한 번호는 다시 사용할 수 없도록 삭제합니다.
+            emailCodeMap.remove(emailKey);
+        } else {
+            result.put("msg", "not_ok");
+        }
+
+        return result;
+    }
 
 
 
