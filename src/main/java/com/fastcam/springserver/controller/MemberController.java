@@ -108,6 +108,12 @@ public class MemberController {
     public HashMap<String, Object> fileupload(@RequestParam("image") MultipartFile file){
         HashMap<String, Object> map = new HashMap<String, Object>();
         String path = sc.getRealPath("/images");
+
+        File imageDir = new File(path);
+        if (!imageDir.exists()) {
+            imageDir.mkdirs();
+        }
+
         Calendar today = Calendar.getInstance();
         long dt = today.getTimeInMillis();
         String filename = file.getOriginalFilename();
