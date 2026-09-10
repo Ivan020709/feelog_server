@@ -186,7 +186,7 @@ public class BoardService {
         Member writer = members.findByUserid(board.getUserid());
         item.put(
                 "writerName",
-                writer != null ? writer.getName() : "알 수 없음"
+                writer != null ? writer.getNickname() : "알 수 없음"
         );
         item.put("email", hidden ? "" : board.getEmail());
         item.put("title", hidden ? "비공개 게시글입니다." : board.getTitle());
