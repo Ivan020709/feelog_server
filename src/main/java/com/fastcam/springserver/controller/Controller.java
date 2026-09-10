@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class Controller {
     @GetMapping("/")
     public String index() {
-        return "CICD 완료";
+        return "테스트";
     }
 }
