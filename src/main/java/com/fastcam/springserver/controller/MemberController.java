@@ -154,6 +154,7 @@ public class MemberController {
         bodyData += "client_id=" + client_id + "&";
         bodyData += "redirect_uri=" + redirect_uri + "&";
         bodyData += "code=" + code;
+        System.out.println("1");
 
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("POST");
@@ -173,6 +174,8 @@ public class MemberController {
         String endpoint2 = "https://kapi.kakao.com/v2/user/me";
         URL url2 = new URL(endpoint2);
 
+        System.out.println("2");
+
         HttpsURLConnection conn2 = (HttpsURLConnection) url2.openConnection();
         conn2.setRequestProperty("Authorization", "Bearer " + oAuthToken.getAccess_token());
         conn2.setDoOutput(true);
@@ -188,6 +191,7 @@ public class MemberController {
         KakaoProfile kakaoProfile = gson2.fromJson(sb2.toString(), KakaoProfile.class);
         KakaoProfile.KakaoAccount ac = kakaoProfile.getAccount();
         KakaoProfile.KakaoAccount.Profile pf = ac.getProfile();
+        System.out.println("3");
 
         System.out.println("id : " + kakaoProfile.getId());
         System.out.println("Profile-Nickname : " + ac.getProfile().getNickname());
@@ -206,6 +210,7 @@ public class MemberController {
             ms.insertKakaoMember(mdto);
             mdto = ms.getMemberBySnsid( kakaoProfile.getId() );
         }
+        System.out.println("4");
         response.sendRedirect("http://3.35.4.91/savekakaoinfo/" + mdto.getUserid());
 
     }
