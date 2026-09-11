@@ -206,7 +206,7 @@ public class MemberController {
             ms.insertKakaoMember(mdto);
             mdto = ms.getMemberBySnsid( kakaoProfile.getId() );
         }
-        response.sendRedirect("http://54.180.155.24:3000/savekakaoinfo/" + mdto.getUserid());
+        response.sendRedirect("http://3.35.4.91/savekakaoinfo/" + mdto.getUserid());
 
     }
 
