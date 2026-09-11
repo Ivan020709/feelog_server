@@ -168,7 +168,9 @@ public class MemberController {
         StringBuilder sb = new StringBuilder();
         while ((input = br.readLine()) != null) {
             sb.append(input);
+            System.out.println(input);
         }
+
         Gson gson = new Gson();
         OAuthToken oAuthToken = gson.fromJson(sb.toString(), OAuthToken.class);
         String endpoint2 = "https://kapi.kakao.com/v2/user/me";
