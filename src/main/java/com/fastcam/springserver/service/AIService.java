@@ -15,7 +15,7 @@ public class AIService {
     public AIService(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
         this.webClient = WebClient.builder()
-                .baseUrl("http://localhost:8000")
+                .baseUrl("http://3.34.47.143:8000")
                 .build();
     }
 

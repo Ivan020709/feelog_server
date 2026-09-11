@@ -16,8 +16,9 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/ai")
 @CrossOrigin({
-        "http://localhost:3000",
-        "http://localhost:3001"
+        "http://3.34.47.143:8000",
+        "http://3.35.4.91:3000",
+        "http://3.35.4.91"
 })
 public class AIController {
 
