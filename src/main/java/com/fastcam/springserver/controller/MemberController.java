@@ -184,9 +184,10 @@ public class MemberController {
         BufferedReader br2 = new BufferedReader(new InputStreamReader(conn2.getInputStream(), "UTF-8"));
         String input2 = "";
         StringBuilder sb2 = new StringBuilder();
+        System.out.println("2.5");
         while ((input2 = br2.readLine()) != null) {
             sb2.append(input2);
-            //System.out.println(input2);
+            System.out.println(input2);
         }
 
         Gson gson2 = new Gson();
